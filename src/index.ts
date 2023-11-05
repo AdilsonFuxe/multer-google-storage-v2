@@ -1,6 +1,8 @@
 import crypto from "crypto";
 import multer from 'multer';
 import {Storage} from '@google-cloud/storage';
+import e from "express";
+import path from 'path';
 
 type MulterGoogleCloudStorageOptions = {
   bucket: string;
@@ -25,13 +27,14 @@ export class MulterGoogleStorage implements multer.StorageEngine {
     }
   }
 
-  getFilename(req, file, cb) {
-    const extension: string = file.originalname.split('.').pop();
-    const filename = `${crypto.randomBytes(24).toString('hex')}.${extension}`;
-    cb(null, filename);
+
+  getFilename(req: e.Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void,) {
+    const extension: string = path.extname(file.originalname);
+    const hash = `${crypto.randomBytes(24).toString('hex')}.${extension}`;
+    cb(null, hash);
   }
 
-  _handleFile(req, file: Express.Multer.File, cb: (error?: any, info?: Partial<Express.Multer.File>) => void): void {
+  _handleFile(req: e.Request, file: Express.Multer.File, cb: (error?: any, info?: Partial<Express.Multer.File>) => void): void {
     this.getFilename(req, file, (err, filename: string) => {
       if (err) {
         return cb(err);
@@ -47,7 +50,7 @@ export class MulterGoogleStorage implements multer.StorageEngine {
 
       file.stream.pipe(blob.createWriteStream()
         .on('error', (err) => cb(err))
-        .on('finish', file => cb(null, {
+        .on('finish', () => cb(null, {
           path: `https://${this.bucketName}.storage.googleapis.com/${filename}`,
           filename
         }))
@@ -55,6 +58,6 @@ export class MulterGoogleStorage implements multer.StorageEngine {
     });
   }
 
-  _removeFile(req: Request, file: Express.Multer.File, callback: (error: (Error | null)) => void): void {
+  _removeFile(req: e.Request, file: Express.Multer.File, callback: (error: (Error | null)) => void): void {
   }
 }
