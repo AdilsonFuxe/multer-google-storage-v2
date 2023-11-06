@@ -1,12 +1,11 @@
-import crypto from "crypto";
+import {randomBytes} from "crypto";
 import multer from 'multer';
 import {Storage} from '@google-cloud/storage';
 import e from "express";
-import path from 'path';
+import {extname} from 'path';
 
 type MulterGoogleCloudStorageOptions = {
   bucket: string;
-  filename?: any;
   projectId: string,
   keyFilename: string,
 };
@@ -21,16 +20,12 @@ export class MulterGoogleStorage implements multer.StorageEngine {
     this.bucketName = options.bucket;
     this.projectId = options.projectId;
     this.keyFilename = options.keyFilename;
-
-    if (options?.filename) {
-      this.getFilename = options.filename;
-    }
   }
 
 
   getFilename(req: e.Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void,) {
-    const extension: string = path.extname(file.originalname);
-    const hash = `${crypto.randomBytes(24).toString('hex')}.${extension}`;
+    const extension: string = extname(file.originalname);
+    const hash = `${randomBytes(24).toString('hex')}${extension}`;
     cb(null, hash);
   }
 
@@ -57,7 +52,6 @@ export class MulterGoogleStorage implements multer.StorageEngine {
       );
     });
   }
-
   _removeFile(req: e.Request, file: Express.Multer.File, callback: (error: (Error | null)) => void): void {
   }
 }
