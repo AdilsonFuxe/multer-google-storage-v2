@@ -1,6 +1,6 @@
 {
   "name": "multer-google-storage-v2",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -17,12 +17,14 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/storage": "^7.5.0",
-    "express": "^4.18.2",
+    "express": "^4.21.2",
     "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
+    "@types/express": "^5.0.1",
     "@types/multer": "^1.4.9",
     "@types/node": "^20.8.10",
     "typescript": "^5.2.2"
-  }
+  },
+  "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
 }

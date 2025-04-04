@@ -1,8 +1,9 @@
 import {randomBytes} from "crypto";
 import multer from 'multer';
 import {Storage} from '@google-cloud/storage';
-import e from "express";
-import {extname} from 'path';
+import e from 'express';
+
+  import {extname} from 'path';
 
 type MulterGoogleCloudStorageOptions = {
   bucket: string;
